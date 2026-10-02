@@ -1,0 +1,17 @@
+<resources>
+
+    <string name="app_name">WorkHub</string>
+
+    <string name="login_title">Đăng nhập</string>
+
+    <string name="login_description">
+        Đăng nhập để tiếp tục sử dụng WorkHub
+    </string>
+
+    <string name="username">Tài khoản</string>
+
+    <string name="password">Mật khẩu</string>
+
+    <string name="login">Đăng nhập</string>
+
+</resources>
