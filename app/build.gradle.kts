@@ -19,7 +19,21 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"http://192.168.1.15:3000/api/v1/\""
+            )
+        }
+
         release {
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"https://api.workhub.com/api/v1/\""
+            )
+
             optimization {
                 enable = false
             }
@@ -43,8 +57,11 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.material)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
     testImplementation(libs.junit)
     testImplementation(libs.json)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+    implementation(libs.androidx.security.crypto)
 }

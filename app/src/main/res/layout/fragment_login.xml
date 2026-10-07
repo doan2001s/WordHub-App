@@ -3,7 +3,18 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data />
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="state"
+            type="com.workhub.global.feature.auth.login.LoginUiState" />
+
+        <variable
+            name="viewModel"
+            type="com.workhub.global.feature.auth.login.LoginViewModel" />
+    </data>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -38,12 +49,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:hint="@string/username">
+                android:hint="@string/username"
+                app:error="@{state.usernameError}">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:afterTextChanged="@{text -> viewModel.onUsernameChanged(text.toString())}"
                     android:autofillHints="username"
                     android:inputType="text" />
 
@@ -55,22 +68,33 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/password"
+                app:error="@{state.passwordError}"
                 app:endIconMode="password_toggle">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:afterTextChanged="@{text -> viewModel.onPasswordChanged(text.toString())}"
                     android:autofillHints="password"
                     android:inputType="textPassword" />
 
             </com.google.android.material.textfield.TextInputLayout>
+            <CheckBox
+                android:id="@+id/cbRememberLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@{state.isRememberChecked}"
+                android:onCheckedChanged="@{(_, checked) -> viewModel.onRememberChanged(checked)}"
+                android:text="@string/remember_login" />
 
             <Button
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:enabled="@{state.canSubmit}"
+                android:onClick="@{() -> viewModel.login()}"
                 android:text="@string/login" />
 
             <ProgressBar
@@ -79,7 +103,7 @@
                 android:layout_height="32dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-                android:visibility="gone" />
+                android:visibility="@{state.isLoading ? View.VISIBLE : View.GONE}" />
 
         </LinearLayout>
 

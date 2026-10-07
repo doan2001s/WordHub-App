@@ -13,5 +13,7 @@
     <string name="password">Mật khẩu</string>
 
     <string name="login">Đăng nhập</string>
-
+    
+    <string name="remember_login">Ghi nhớ đăng nhập</string>
+    
 </resources>
