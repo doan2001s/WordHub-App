@@ -5,11 +5,16 @@ import com.workhub.global.core.ui.BaseViewModel
 import com.workhub.global.feature.auth.domain.model.LoginCredentials
 import com.workhub.global.feature.auth.domain.repository.AuthResult
 import com.workhub.global.feature.auth.domain.usecase.LoginUseCase
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase
 ) : BaseViewModel<LoginUiState>(initialState = LoginUiState()) {
+
+    private val _events = MutableSharedFlow<LoginEvent>()
+    val events = _events.asSharedFlow()
 
     fun onUsernameChanged(username: String) = updateState {
         copy(username = username, usernameError = null)
@@ -28,8 +33,6 @@ class LoginViewModel(
 
         val state = currentState
         viewModelScope.launch {
-            updateState { copy(message = null) }
-
             val result = withLoading {
                 loginUseCase(
                     LoginCredentials(
@@ -40,18 +43,14 @@ class LoginViewModel(
                 )
             }
 
-            updateState {
-                copy(
-                    message = when (result) {
-                        is AuthResult.Success -> "Đăng nhập thành công"
-                        is AuthResult.Failure -> result.message
-                    }
-                )
+            when (result) {
+                is AuthResult.Success -> _events.emit(LoginEvent.LoginSuccess)
+                is AuthResult.Failure -> {
+                    _events.emit(LoginEvent.ShowMessage(result.message))
+                }
             }
         }
     }
-
-    fun consumeMessage() = updateState { copy(message = null) }
 
     private fun validateInput(): Boolean {
         val usernameError = if (currentState.username.isBlank()) {

@@ -9,11 +9,14 @@ import com.workhub.global.feature.auth.domain.usecase.LoginUseCase
 
 class AuthDependencies(context: Context) {
 
+    private val tokenManager = SecureTokenManager(context.applicationContext)
+    private val networkClient = NetworkClient(tokenManager)
+
     val loginUseCase: LoginUseCase by lazy {
         LoginUseCase(
             AuthRepositoryImpl(
-                authApi = NetworkClient.create(AuthApi::class.java),
-                tokenManager = SecureTokenManager(context.applicationContext)
+                authApi = networkClient.create(AuthApi::class.java),
+                tokenManager = tokenManager
             )
         )
     }

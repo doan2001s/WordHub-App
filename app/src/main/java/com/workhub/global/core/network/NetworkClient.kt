@@ -2,6 +2,7 @@ package com.workhub.global.core.network
 
 import android.util.Log
 import com.workhub.global.BuildConfig
+import com.workhub.global.core.session.SecureTokenManager
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okio.Buffer
@@ -9,7 +10,25 @@ import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object NetworkClient {
+class NetworkClient(
+    private val tokenManager: SecureTokenManager
+) {
+
+    private val authInterceptor = Interceptor { chain ->
+        val request = chain.request()
+        val accessToken = tokenManager.getAccessToken()
+        val isLoginRequest = request.url().encodedPath().endsWith("/auth/login")
+
+        val authenticatedRequest = if (!accessToken.isNullOrBlank() && !isLoginRequest) {
+            request.newBuilder()
+                .header("Authorization", "Bearer $accessToken")
+                .build()
+        } else {
+            request
+        }
+
+        chain.proceed(authenticatedRequest)
+    }
 
     private val loggingInterceptor = Interceptor { chain ->
         val request = chain.request()
@@ -44,6 +63,7 @@ object NetworkClient {
 
     private val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
             .build()
     }
@@ -107,6 +127,8 @@ object NetworkClient {
         "(Authorization:\\s*(?:Bearer\\s+)?)\\S+",
         RegexOption.IGNORE_CASE
     )
-    private const val RESPONSE_BODY_LOG_LIMIT = 64L * 1024L
-    private const val TAG = "NetworkApi"
+    private companion object {
+        const val RESPONSE_BODY_LOG_LIMIT = 64L * 1024L
+        const val TAG = "NetworkApi"
+    }
 }

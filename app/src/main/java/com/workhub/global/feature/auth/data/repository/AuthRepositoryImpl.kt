@@ -27,19 +27,20 @@ class AuthRepositoryImpl(
         }) {
             is ApiResult.Success -> {
                 val response = result.data
-                val accessToken = response?.accessToken
+                val tokens = response?.tokens
+                val accessToken = tokens?.accessToken
 
                 if (accessToken.isNullOrBlank()) {
                     AuthResult.Failure("Đăng nhập thành công nhưng máy chủ không trả về token")
                 } else {
                     tokenManager.saveTokens(
                         accessToken = accessToken,
-                        refreshToken = response.refreshToken
+                        refreshToken = tokens.refreshToken
                     )
                     AuthResult.Success(
                         AuthTokens(
                             accessToken = accessToken,
-                            refreshToken = response.refreshToken
+                            refreshToken = tokens.refreshToken
                         )
                     )
                 }
