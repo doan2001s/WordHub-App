@@ -5,8 +5,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="state"
             type="com.workhub.global.feature.auth.presentation.login.LoginUiState" />
@@ -96,14 +94,6 @@
                 android:enabled="@{state.canSubmit}"
                 android:onClick="@{() -> viewModel.login()}"
                 android:text="@string/login" />
-
-            <ProgressBar
-                android:id="@+id/progressLoading"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:visibility="@{state.isLoading ? View.VISIBLE : View.GONE}" />
 
         </LinearLayout>
 

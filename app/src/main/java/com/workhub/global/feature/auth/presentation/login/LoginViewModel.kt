@@ -24,23 +24,24 @@ class LoginViewModel(
     }
 
     fun login() {
-        if (currentState.isLoading || !validateInput()) return
+        if (isLoading.value || !validateInput()) return
 
         val state = currentState
         viewModelScope.launch {
-            updateState { copy(isLoading = true, message = null) }
+            updateState { copy(message = null) }
 
-            val result = loginUseCase(
-                LoginCredentials(
-                    username = state.username.trim(),
-                    password = state.password,
-                    rememberMe = state.isRememberChecked
+            val result = withLoading {
+                loginUseCase(
+                    LoginCredentials(
+                        username = state.username.trim(),
+                        password = state.password,
+                        rememberMe = state.isRememberChecked
+                    )
                 )
-            )
+            }
 
             updateState {
                 copy(
-                    isLoading = false,
                     message = when (result) {
                         is AuthResult.Success -> "Đăng nhập thành công"
                         is AuthResult.Failure -> result.message

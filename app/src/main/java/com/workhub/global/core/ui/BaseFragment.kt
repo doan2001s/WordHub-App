@@ -6,6 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 
 abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
 
@@ -53,7 +57,18 @@ abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
 
     protected open fun observeData() = Unit
 
+    protected fun observeLoading(viewModel: BaseViewModel<*>) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isLoading.collect { isLoading ->
+                    (activity as? BaseActivity<*>)?.setLoadingVisible(isLoading)
+                }
+            }
+        }
+    }
+
     override fun onDestroyView() {
+        (activity as? BaseActivity<*>)?.setLoadingVisible(false)
         _binding = null
         super.onDestroyView()
     }

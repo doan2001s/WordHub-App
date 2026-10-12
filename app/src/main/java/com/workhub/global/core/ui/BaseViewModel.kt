@@ -11,8 +11,10 @@ abstract class BaseViewModel<S>(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(initialState)
+    private val _isLoading = MutableStateFlow(false)
 
     val uiState: StateFlow<S> = _uiState.asStateFlow()
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     protected val currentState: S
         get() = _uiState.value
@@ -22,6 +24,17 @@ abstract class BaseViewModel<S>(
     ) {
         _uiState.update { state ->
             state.reducer()
+        }
+    }
+
+    protected suspend fun <T> withLoading(
+        block: suspend () -> T
+    ): T {
+        _isLoading.value = true
+        return try {
+            block()
+        } finally {
+            _isLoading.value = false
         }
     }
 }

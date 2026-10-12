@@ -30,6 +30,9 @@ class SecureTokenManager(context: Context) {
         return securePrefs.getString(KEY_ACCESS_TOKEN, null)
     }
 
+    fun getRefetchToken(): String?{
+        return securePrefs.getString(KEY_REFRESH_TOKEN, null)
+    }
     private companion object {
         const val PREF_NAME = "secure_tokens"
         const val KEY_ACCESS_TOKEN = "access_token"

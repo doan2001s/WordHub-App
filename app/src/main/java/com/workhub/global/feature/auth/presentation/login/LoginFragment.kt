@@ -32,6 +32,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
     }
 
     override fun observeData() {
+        observeLoading(viewModel)
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { binding.state = it }
