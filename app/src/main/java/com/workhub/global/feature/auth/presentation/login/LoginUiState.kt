@@ -1,4 +1,4 @@
-package com.workhub.global.feature.auth.login
+package com.workhub.global.feature.auth.presentation.login
 
 data class LoginUiState(
     val username: String = "",
@@ -10,7 +10,5 @@ data class LoginUiState(
     val message: String? = null
 ) {
     val canSubmit: Boolean
-        get() = username.isNotBlank() &&
-                password.isNotBlank() &&
-                !isLoading
+        get() = username.isNotBlank() && password.isNotBlank() && !isLoading
 }

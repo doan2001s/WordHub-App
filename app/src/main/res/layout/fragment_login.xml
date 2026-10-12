@@ -9,11 +9,11 @@
 
         <variable
             name="state"
-            type="com.workhub.global.feature.auth.login.LoginUiState" />
+            type="com.workhub.global.feature.auth.presentation.login.LoginUiState" />
 
         <variable
             name="viewModel"
-            type="com.workhub.global.feature.auth.login.LoginViewModel" />
+            type="com.workhub.global.feature.auth.presentation.login.LoginViewModel" />
     </data>
 
     <ScrollView

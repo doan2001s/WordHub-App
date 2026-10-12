@@ -4,18 +4,8 @@ import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
-object SecureTokenManager {
-    private const val PREF_NAME = "secure_tokens"
-    private const val KEY_ACCESS_TOKEN = "access_token"
-    private const val KEY_REFRESH_TOKEN = "refresh_token"
-
-    // lớp context dùng chung của app
-    private lateinit var appContext: Context
-
-    //Gọi khi mà app mở dùng applicationContext để tránh giữ context lâu
-    fun init(context: Context) {
-        appContext = context.applicationContext
-    }
+class SecureTokenManager(context: Context) {
+    private val appContext = context.applicationContext
 
     private val securePrefs by lazy {
         val masterKey =
@@ -29,14 +19,20 @@ object SecureTokenManager {
         )
     }
 
-    fun saveToken(accessToken: String, refetchToken: String) {
+    fun saveTokens(accessToken: String, refreshToken: String?) {
         securePrefs.edit()
-            .putString(KEY_ACCESS_TOKEN,accessToken)
-            .putString(KEY_REFRESH_TOKEN, refetchToken)
+            .putString(KEY_ACCESS_TOKEN, accessToken)
+            .putString(KEY_REFRESH_TOKEN, refreshToken)
             .apply()
     }
+
     fun getAccessToken(): String? {
-         return securePrefs.getString(KEY_ACCESS_TOKEN,null)
+        return securePrefs.getString(KEY_ACCESS_TOKEN, null)
     }
 
+    private companion object {
+        const val PREF_NAME = "secure_tokens"
+        const val KEY_ACCESS_TOKEN = "access_token"
+        const val KEY_REFRESH_TOKEN = "refresh_token"
+    }
 }

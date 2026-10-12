@@ -15,5 +15,7 @@
     <string name="login">Đăng nhập</string>
     
     <string name="remember_login">Ghi nhớ đăng nhập</string>
+
+    <string name="home_title">Trang chủ</string>
     
 </resources>
