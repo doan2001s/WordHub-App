@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Base -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Brand -->
+    <color name="primary_navy">#081F45</color>
+    <color name="primary_blue">#0861EB</color>
+
+    <!-- Background / Surface -->
+    <color name="background">#F6F8FC</color>
+    <color name="surface">#FFFFFFFF</color>
+    <color name="surface_blue">#EDF5FF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#0F141F</color>
+    <color name="text_secondary">#646E80</color>
+    <color name="text_disabled">#9AA3B2</color>
+
+    <!-- Border / Divider -->
+    <color name="border">#E0E6F0</color>
+    <color name="divider">#EDF0F5</color>
+
+    <!-- Status -->
+    <color name="success">#0D9E5C</color>
+    <color name="success_background">#E8FAF0</color>
+
+    <color name="warning">#F07D14</color>
+    <color name="warning_background">#FFF4E6</color>
+
+    <color name="error">#E62933</color>
+    <color name="error_background">#FFF0F1</color>
+
+    <color name="purple">#7A3DE6</color>
+    <color name="purple_background">#F1ECFF</color>
+
+    <!-- Icon colors -->
+    <color name="icon_primary">#0861EB</color>
+    <color name="icon_secondary">#64748B</color>
+    <color name="icon_success">#0D9E5C</color>
+    <color name="icon_warning">#E77A10</color>
+    <color name="icon_error">#D13C42</color>
+    <color name="icon_purple">#7C3AED</color>
+
+    <!-- Button -->
+    <color name="button_primary">#0861EB</color>
+    <color name="button_primary_pressed">#064FC1</color>
+    <color name="button_disabled">#C8D2E2</color>
+
 </resources>
