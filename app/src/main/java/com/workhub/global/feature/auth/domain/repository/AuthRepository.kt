@@ -1,16 +1,17 @@
 package com.workhub.global.feature.auth.domain.repository
 
 import com.workhub.global.feature.auth.domain.model.AuthTokens
+import com.workhub.global.feature.auth.domain.model.AuthError
 import com.workhub.global.feature.auth.domain.model.LoginCredentials
 
 interface AuthRepository {
 
-    suspend fun login(credentials: LoginCredentials): AuthResult<AuthTokens>
+    suspend fun login(credentials: LoginCredentials): AuthResult
 }
 
-sealed interface AuthResult<out T> {
+sealed interface AuthResult {
 
-    data class Success<T>(val data: T) : AuthResult<T>
+    data class Success(val data: AuthTokens) : AuthResult
 
-    data class Failure(val message: String) : AuthResult<Nothing>
+    data class Failure(val error: AuthError) : AuthResult
 }

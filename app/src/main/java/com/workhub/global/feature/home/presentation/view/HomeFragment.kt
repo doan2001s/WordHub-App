@@ -1,4 +1,4 @@
-package com.workhub.global.feature.home.presentation
+package com.workhub.global.feature.home.presentation.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

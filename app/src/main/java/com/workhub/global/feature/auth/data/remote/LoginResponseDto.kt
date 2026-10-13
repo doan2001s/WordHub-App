@@ -1,10 +1,8 @@
 package com.workhub.global.feature.auth.data.remote
 
-data class LoginResponseDto(
-    val tokens: LoginTokensDto?
-)
+import com.google.gson.annotations.SerializedName
 
-data class LoginTokensDto(
-    val accessToken: String?,
-    val refreshToken: String?
+data class LoginResponseDto(
+    @SerializedName("tokens")
+    val tokens: LoginTokensDto?
 )

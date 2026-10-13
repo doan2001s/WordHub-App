@@ -18,7 +18,10 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.workhub.global.feature.home.presentation.HomeFragment"
+        android:name="com.workhub.global.feature.home.presentation.view.HomeFragment"
         android:label="Home" />
-
+    <fragment
+        android:id="@+id/servicesFragment"
+        android:name="com.workhub.global.feature.services.ServicesFragment"
+        android:label="Services" />
 </navigation>

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
-class SecureTokenManager(context: Context) {
+class SecureTokenManager(context: Context) : TokenStorage {
     private val appContext = context.applicationContext
 
     private val securePrefs by lazy {
@@ -19,19 +19,26 @@ class SecureTokenManager(context: Context) {
         )
     }
 
-    fun saveTokens(accessToken: String, refreshToken: String?) {
+    override fun saveTokens(accessToken: String, refreshToken: String?) {
         securePrefs.edit()
             .putString(KEY_ACCESS_TOKEN, accessToken)
             .putString(KEY_REFRESH_TOKEN, refreshToken)
             .apply()
     }
 
-    fun getAccessToken(): String? {
+    override fun getAccessToken(): String? {
         return securePrefs.getString(KEY_ACCESS_TOKEN, null)
     }
 
-    fun getRefetchToken(): String?{
+    override fun getRefreshToken(): String? {
         return securePrefs.getString(KEY_REFRESH_TOKEN, null)
+    }
+
+    override fun clearTokens() {
+        securePrefs.edit()
+            .remove(KEY_ACCESS_TOKEN)
+            .remove(KEY_REFRESH_TOKEN)
+            .apply()
     }
     private companion object {
         const val PREF_NAME = "secure_tokens"

@@ -2,7 +2,7 @@ package com.workhub.global.core.network
 
 import android.util.Log
 import com.workhub.global.BuildConfig
-import com.workhub.global.core.session.SecureTokenManager
+import com.workhub.global.core.session.TokenStorage
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okio.Buffer
@@ -11,12 +11,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class NetworkClient(
-    private val tokenManager: SecureTokenManager
+    private val tokenStorage: TokenStorage
 ) {
 
     private val authInterceptor = Interceptor { chain ->
         val request = chain.request()
-        val accessToken = tokenManager.getAccessToken()
+        val accessToken = tokenStorage.getAccessToken()
         val isLoginRequest = request.url().encodedPath().endsWith("/auth/login")
 
         val authenticatedRequest = if (!accessToken.isNullOrBlank() && !isLoginRequest) {
@@ -62,10 +62,12 @@ class NetworkClient(
     }
 
     private val okHttpClient: OkHttpClient by lazy {
-        OkHttpClient.Builder()
-            .addInterceptor(authInterceptor)
-            .addInterceptor(loggingInterceptor)
-            .build()
+        OkHttpClient.Builder().apply {
+            addInterceptor(authInterceptor)
+            if (BuildConfig.DEBUG) {
+                addInterceptor(loggingInterceptor)
+            }
+        }.build()
     }
 
     private val retrofit: Retrofit by lazy {

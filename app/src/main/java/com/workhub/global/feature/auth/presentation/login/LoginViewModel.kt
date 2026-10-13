@@ -2,6 +2,7 @@ package com.workhub.global.feature.auth.presentation.login
 
 import androidx.lifecycle.viewModelScope
 import com.workhub.global.core.ui.BaseViewModel
+import com.workhub.global.feature.auth.domain.model.AuthError
 import com.workhub.global.feature.auth.domain.model.LoginCredentials
 import com.workhub.global.feature.auth.domain.repository.AuthResult
 import com.workhub.global.feature.auth.domain.usecase.LoginUseCase
@@ -29,7 +30,7 @@ class LoginViewModel(
     }
 
     fun login() {
-        if (isLoading.value || !validateInput()) return
+        if (isLoading.value) return
 
         val state = currentState
         viewModelScope.launch {
@@ -46,23 +47,35 @@ class LoginViewModel(
             when (result) {
                 is AuthResult.Success -> _events.emit(LoginEvent.LoginSuccess)
                 is AuthResult.Failure -> {
-                    _events.emit(LoginEvent.ShowMessage(result.message))
+                    handleFailure(result.error)
                 }
             }
         }
     }
 
-    private fun validateInput(): Boolean {
-        val usernameError = if (currentState.username.isBlank()) {
-            "Tài khoản không được để trống"
-        } else null
-        val passwordError = if (currentState.password.isBlank()) {
-            "Mật khẩu không được để trống"
-        } else null
+    private suspend fun handleFailure(error: AuthError) {
+        when (error) {
+            AuthError.InvalidUsername -> updateState {
+                copy(usernameError = "Tài khoản không được để trống")
+            }
 
-        updateState {
-            copy(usernameError = usernameError, passwordError = passwordError)
+            AuthError.InvalidPassword -> updateState {
+                copy(passwordError = "Mật khẩu không được để trống")
+            }
+
+            else -> _events.emit(LoginEvent.ShowMessage(error.toMessage()))
         }
-        return usernameError == null && passwordError == null
+    }
+
+    private fun AuthError.toMessage(): String {
+        return when (this) {
+            AuthError.InvalidUsername -> "Tài khoản không được để trống"
+            AuthError.InvalidPassword -> "Mật khẩu không được để trống"
+            AuthError.InvalidCredentials -> "Tài khoản hoặc mật khẩu không đúng"
+            AuthError.EmptyToken -> "Máy chủ không trả về token"
+            AuthError.Network -> "Không thể kết nối đến máy chủ"
+            AuthError.Server -> "Hệ thống đang gặp sự cố, vui lòng thử lại sau"
+            AuthError.Unknown -> "Đã có lỗi xảy ra, vui lòng thử lại"
+        }
     }
 }
